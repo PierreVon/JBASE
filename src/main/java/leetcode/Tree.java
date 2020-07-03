@@ -134,6 +134,27 @@ public class Tree {
         }
     }
 
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        if (nums == null || nums.length == 0) return null;
+        int mid = nums.length / 2;
+        TreeNode head = new TreeNode(nums[mid]);
+        createChild(0, mid, nums.length - 1, nums, head);
+        return head;
+    }
+
+    private static void createChild(int left, int mid, int right, int[] nums, TreeNode father) {
+        if (left < mid) {
+            int midl = (left + mid) / 2;
+            father.left = new TreeNode(nums[midl]);
+            createChild(left, midl, mid - 1, nums, father.left);
+        }
+        if (mid < right) {
+            int midr = (int) Math.ceil((double) ((right + mid)) / 2);
+            father.right = new TreeNode(nums[midr]);
+            createChild(mid + 1, midr, right, nums, father.right);
+        }
+    }
+
 
     public static void main(String[] args) {
         TreeNode head = new TreeNode(2);
@@ -146,6 +167,8 @@ public class Tree {
 
 
         System.out.println(maxPathSum(deserialize("[1,-2,-3,1,3,-2,null,-1]")));
+
+        System.out.println(serialize(sortedArrayToBST(new int[]{0, 1, 2})));
 
     }
 

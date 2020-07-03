@@ -117,10 +117,10 @@ public class Dynamic {
     // 链接：https://leetcode-cn.com/problems/longest-increasing-subsequence/
     public static int lengthOfLIS(int[] nums) {
         int n = nums.length;
-        if(n==0) return 0;
+        if (n == 0) return 0;
         int[] dp = new int[n];
         dp[0] = 0;
-        int realMax=0;
+        int realMax = 0;
         for (int i = 1; i < n; i++) {
             int max = 0;
             for (int j = 0; j < i; j++) {
@@ -158,11 +158,30 @@ public class Dynamic {
         return res;
     }
 
+    // 518. 零钱兑换 II
+    // 给定不同面额的硬币和一个总金额。
+    // 写出函数来计算可以凑成总金额的硬币组合数。
+    // 假设每一种面额的硬币有无限个。
+    public static int change(int amount, int[] coins) {
+        if (coins.length == 0 || amount < 1) return 0;
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int coin : coins) {
+            for (int i = coin; i < amount + 1; i++) {
+                dp[i] += dp[i - coin];
+            }
+        }
+        return dp[amount];
+    }
+
     public static void main(String[] args) {
         System.out.println(maxProduct(new int[]{2, 3, -2, 4}));
         System.out.println(maxProduct(new int[]{-2, 0, -1}));
         System.out.println(maxProduct(new int[]{-2, 0, 4, -1, -3, -2, 2}));
         System.out.println(maxProduct(new int[]{-2, 4, -1, -3, -2, 2, 0, 1, 2}));
         System.out.println(maxProduct(new int[]{3, -1, 4}));
+        System.out.println();
+        System.out.println(change(5, new int[]{1, 2, 5}));
+        System.out.println(change(10, new int[]{1, 2, 5}));
     }
 }
