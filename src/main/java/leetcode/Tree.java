@@ -1,5 +1,6 @@
 package leetcode;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Tree {
@@ -153,6 +154,90 @@ public class Tree {
             father.right = new TreeNode(nums[midr]);
             createChild(mid + 1, midr, right, nums, father.right);
         }
+    }
+
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) return false;
+        if (root.val == sum && root.left == null && root.right == null) return true;
+        else {
+            int diff = sum - root.val;
+            return hasPathSum(root.left, diff) || hasPathSum(root.right, diff);
+        }
+    }
+
+    // 面试题 17.13. 恢复空格
+    // 哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。
+    // 像句子"I reset the computer. It still didn’t boot!"已经变成了
+    // "iresetthecomputeritstilldidntboot"。在处理标点符号和大小写之前，
+    // 你得先把它断成词语。当然了，你有一本厚厚的词典dictionary，不过，有些词
+    // 没在词典里。假设文章用sentence表示，设计一个算法，把文章断开，要求未识
+    // 别的字符最少，返回未识别的字符数。
+
+    public int respace(String[] dictionary, String sentence) {
+        if (sentence == null || sentence.length() == 0) return 0;
+        if (dictionary == null || dictionary.length == 0) return sentence.length();
+        Trie trie = new Trie();
+        for (String s : dictionary) {
+            trie.insert(s);
+        }
+        int[] dp = new int[sentence.length() + 1];
+        Arrays.fill(dp, sentence.length());
+        dp[0] = 0;
+        for (int i = 1; i <= sentence.length(); i++) {
+            dp[i] = dp[i - 1] + 1;
+            Trie tmp = trie;
+            for (int j = i; j >= 1; --j) {
+                int t = sentence.charAt(j - 1) - 'a';
+                if (tmp.next[t] == null) {
+                    break;
+                }
+                if (tmp.isEnd) {
+                    dp[i] = Math.min(dp[i], dp[j - 1]);
+                }
+                if (dp[i] == 0) {
+                    break;
+                }
+                tmp = tmp.next[t];
+            }
+        }
+        return dp[sentence.length()];
+    }
+
+    class Trie {
+        Trie[] next;
+        boolean isEnd;
+
+        Trie() {
+            next = new Trie[26];
+            isEnd = false;
+        }
+
+        void insert(String s) {
+            if (s == null || s.length() == 0) {
+                return;
+            }
+            Trie cur = this;
+            for (int i = s.length() - 1; i >= 0; i--) {
+                int idx = s.charAt(i) - 'a';
+                if (cur.next[idx] == null) {
+                    cur.next[idx] = new Trie();
+                }
+                cur = cur.next[idx];
+            }
+            cur.isEnd = true;
+        }
+    }
+
+    // 通过hash值代替字典树
+    static final long P = Integer.MAX_VALUE;
+    static final long BASE = 41;
+
+    public long getHash(String s) {
+        long hash = 0;
+        for (int i = s.length() - 1; i >= 0; --i) {
+            hash = (hash * BASE + s.charAt(i) - 'a') % P;
+        }
+        return hash;
     }
 
 

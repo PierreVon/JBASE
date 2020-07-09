@@ -206,13 +206,44 @@ public class Solution {
         return max;
     }
 
-    public static void print2Dint(int[][] arr){
-        for(int[] i: arr){
-            for(int j : i){
+    public static void print2Dint(int[][] arr) {
+        for (int[] i : arr) {
+            for (int j : i) {
                 System.out.printf("%d, ", j);
             }
             System.out.println();
         }
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        return uniquePathsWithObstacles(obstacleGrid, 0, 0);
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid, int x, int y) {
+        int n = obstacleGrid.length - 1;
+        int m = obstacleGrid[0].length - 1;
+        if (x > n || y > m) return 0;
+        if (obstacleGrid[x][y] == 1) return 0;
+        if (x == n && y == m) return 1;
+        else {
+            return uniquePathsWithObstacles(obstacleGrid, x + 1, y) + uniquePathsWithObstacles(obstacleGrid, x, y + 1);
+        }
+    }
+
+    public int[] divingBoard(int shorter, int longer, int k) {
+        if (k < 1 || longer < shorter) return new int[0];
+        int total = k * shorter;
+        int diff = longer - shorter;
+        if (diff == 0) {
+            return new int[]{total};
+        }
+        int[] res = new int[k + 1];
+        res[0] = total;
+        for (int i = 1; i <= k; i++) {
+            total += diff;
+            res[i] = total;
+        }
+        return res;
     }
 
     public static void main(String[] args) {
